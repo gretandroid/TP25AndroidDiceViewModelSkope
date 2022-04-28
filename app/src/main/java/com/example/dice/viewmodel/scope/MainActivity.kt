@@ -10,10 +10,6 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 const val ONE = 1
-const val TWO = 2
-const val THREE = 3
-const val FOUR = 4
-const val FIVE = 5
 const val SIX = 6
 
 val diceImages: List<Int> by lazy {
@@ -26,10 +22,6 @@ val diceImages: List<Int> by lazy {
         R.drawable.dice_face_five,
     )
 }
-
-fun List<Int>.imageViewId(): Int = if (isEmpty())
-    throw NoSuchElementException("dice throw is empty.")
-else elementAt(index = 1)
 
 data class DiceGame(
     val firstDice: Int,
