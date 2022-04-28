@@ -1,8 +1,9 @@
 package com.example.dice.viewmodel.scope
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.widget.ImageView
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.*
 import com.example.dice.viewmodel.scope.databinding.ActivityMainBinding
 import kotlinx.coroutines.delay
@@ -14,6 +15,7 @@ const val THREE = 3
 const val FOUR = 4
 const val FIVE = 5
 const val SIX = 6
+
 val diceImages: List<Int> by lazy {
     listOf(
         R.drawable.dice_face_one,
@@ -56,7 +58,8 @@ class MainActivity : AppCompatActivity() {
         val dicesViewModel: DicesViewModel = ViewModelProvider(this)
             .get(DicesViewModel::class.java)
         dicesViewModel.dicesThrow.observe(this) { dices ->
-            images[dices.first].setImageResource(dices.second)
+            images[dices.first].setImageResource(diceImages[dices.second-1])
+            Log.d("voir", dices.toString())
         }
         binding.rollDicebutton.setOnClickListener {
             dicesViewModel.onRollDiceClickButton()
