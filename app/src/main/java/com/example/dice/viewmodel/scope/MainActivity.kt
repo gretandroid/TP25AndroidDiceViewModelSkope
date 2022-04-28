@@ -23,13 +23,20 @@ val diceImages: List<Int> by lazy {
         R.drawable.dice_face_three,
         R.drawable.dice_face_four,
         R.drawable.dice_face_five,
-        R.drawable.dice_face_six,
+        R.drawable.dice_face_five,
     )
 }
 
 fun List<Int>.imageViewId(): Int = if (isEmpty())
     throw NoSuchElementException("dice throw is empty.")
 else elementAt(index = 1)
+
+data class DiceGame(
+    val firstDice:Int,
+    val secondDice:Int,
+    val thirsDice:Int
+)
+
 
 class DicesViewModel : ViewModel() {
     private val _dicesThrow = MutableLiveData<Pair<Int, Int>>()
@@ -59,9 +66,10 @@ class MainActivity : AppCompatActivity() {
             binding.secondDiceImage,
             binding.thirdDiceImage,
         )
+        Log.d("dans le oncreate","foo bar")
         val dicesViewModel: DicesViewModel = ViewModelProvider(this)
             .get(DicesViewModel::class.java)
-        dicesViewModel.dicesThrow.observe(this) { dices ->
+        dicesViewModel.dicesThrow.observe(this) { dices: Pair<Int, Int> ->
             images[dices.first].setImageResource(diceImages[dices.second-1])
             Log.d("voir", dices.toString())
         }
