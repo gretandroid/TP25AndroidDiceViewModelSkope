@@ -2,8 +2,10 @@ package com.example.dice.viewmodel.scope
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.ImageView
-import androidx.lifecycle.*
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import com.example.dice.viewmodel.scope.databinding.ActivityMainBinding
 
 val diceImages: List<Int> by lazy {
@@ -33,8 +35,11 @@ class MainActivity : AppCompatActivity() {
             binding.secondDiceImage,
             binding.thirdDiceImage,
         )
-        val dicesViewModel: DicesViewModel = ViewModelProvider(this).get(DicesViewModel::class.java)
-
+        val dicesViewModel: DicesViewModel = ViewModelProvider(this)
+            .get(DicesViewModel::class.java)
+        dicesViewModel.dicesThrow.observe(this) { dices ->
+            images[dices.first].setImageResource(dices.second)
+        }
 
         setContentView(binding.root)
     }
