@@ -32,23 +32,21 @@ fun List<Int>.imageViewId(): Int = if (isEmpty())
 else elementAt(index = 1)
 
 data class DiceGame(
-    val firstDice:Int,
-    val secondDice:Int,
-    val thirsDice:Int
+    val firstDice: Int,
+    val secondDice: Int,
+    val thirdDice: Int
 )
 
 
 class DicesViewModel : ViewModel() {
-    private val _dicesThrow = MutableLiveData<Pair<Int, Int>>()
-    val dicesThrow: LiveData<Pair<Int, Int>> = _dicesThrow
+    private val _dicesThrow = MutableLiveData<DiceGame>()
+    val dicesThrow: LiveData<DiceGame> = _dicesThrow
     private fun randomDice(): Int = (ONE..SIX).random()
     fun onRollDiceClickButton() {
-        for (i in 0..2) {
-            viewModelScope.launch {
-                for (j in 0..10) {
-                    delay(timeMillis = 150)
-                    _dicesThrow.value = Pair(i, randomDice())
-                }
+        viewModelScope.launch {
+            for (j in 0..10) {
+                delay(timeMillis = 150)
+                _dicesThrow.value = DiceGame(randomDice(), randomDice(), randomDice())
             }
         }
     }
@@ -66,11 +64,13 @@ class MainActivity : AppCompatActivity() {
             binding.secondDiceImage,
             binding.thirdDiceImage,
         )
-        Log.d("dans le oncreate","foo bar")
+        Log.d("dans le oncreate", "foo bar")
         val dicesViewModel: DicesViewModel = ViewModelProvider(this)
             .get(DicesViewModel::class.java)
-        dicesViewModel.dicesThrow.observe(this) { dices: Pair<Int, Int> ->
-            images[dices.first].setImageResource(diceImages[dices.second-1])
+        dicesViewModel.dicesThrow.observe(this) { dices: DiceGame ->
+            images[0].setImageResource(diceImages[dices.firstDice - 1])
+            images[1].setImageResource(diceImages[dices.secondDice - 1])
+            images[2].setImageResource(diceImages[dices.thirdDice - 1])
             Log.d("voir", dices.toString())
         }
         binding.rollDicebutton.setOnClickListener {
