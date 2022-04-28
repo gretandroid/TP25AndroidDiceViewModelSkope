@@ -27,6 +27,10 @@ val diceImages: List<Int> by lazy {
     )
 }
 
+fun List<Int>.imageViewId(): Int = if (isEmpty())
+    throw NoSuchElementException("dice throw is empty.")
+else elementAt(index = 1)
+
 class DicesViewModel : ViewModel() {
     private val _dicesThrow = MutableLiveData<Pair<Int, Int>>()
     val dicesThrow: LiveData<Pair<Int, Int>> = _dicesThrow
