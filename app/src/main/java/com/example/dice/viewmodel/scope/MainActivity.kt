@@ -2,12 +2,18 @@ package com.example.dice.viewmodel.scope
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
+import android.widget.ImageView
+import androidx.lifecycle.*
 import com.example.dice.viewmodel.scope.databinding.ActivityMainBinding
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
+const val ONE = 1
+const val TWO = 2
+const val THREE = 3
+const val FOUR = 4
+const val FIVE = 5
+const val SIX = 6
 val diceImages: List<Int> by lazy {
     listOf(
         R.drawable.dice_face_one,
@@ -22,6 +28,18 @@ val diceImages: List<Int> by lazy {
 class DicesViewModel : ViewModel() {
     private val _dicesThrow = MutableLiveData<Pair<Int, Int>>()
     val dicesThrow: LiveData<Pair<Int, Int>> = _dicesThrow
+    private fun randomDice(): Int = (ONE..SIX).random()
+    fun onRollDiceClickButton() {
+        for (i in 0..2) {
+            viewModelScope.launch {
+                for (j in 0..20) {
+                    delay(timeMillis = 500)
+                    _dicesThrow.value = Pair(i, randomDice())
+                }
+            }
+        }
+    }
+
 
 }
 
@@ -30,7 +48,7 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val binding = ActivityMainBinding.inflate(layoutInflater)
-        val images = listOf(
+        val images: List<ImageView> = listOf(
             binding.firstDiceImage,
             binding.secondDiceImage,
             binding.thirdDiceImage,
@@ -40,7 +58,9 @@ class MainActivity : AppCompatActivity() {
         dicesViewModel.dicesThrow.observe(this) { dices ->
             images[dices.first].setImageResource(dices.second)
         }
-
+        binding.rollDicebutton.setOnClickListener {
+            dicesViewModel.onRollDiceClickButton()
+        }
         setContentView(binding.root)
     }
 }
