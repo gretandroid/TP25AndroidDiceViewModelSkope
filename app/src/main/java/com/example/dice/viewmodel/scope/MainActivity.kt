@@ -34,8 +34,8 @@ class DicesViewModel : ViewModel() {
     fun onRollDiceClickButton() {
         for (i in 0..2) {
             viewModelScope.launch {
-                for (j in 0..20) {
-                    delay(timeMillis = 500)
+                for (j in 0..10) {
+                    delay(timeMillis = 150)
                     _dicesThrow.value = Pair(i, randomDice())
                 }
             }
